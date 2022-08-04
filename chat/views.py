@@ -4,8 +4,10 @@ from rest_framework import generics
 from django.db import models
 from chat.models import Chat, Message
 from common.models import User
-from .serializers import ChatListSerializer, ChatCreateSerializer, MessageCreateSerializer, MessageSerializer
+from .serializers import ChatListSerializer, ChatCreateSerializer, MessageCreateSerializer, MessageSerializer, \
+    ChatDetailSerializer
 from helpers.pagination import CustomPagination
+from rest_framework.permissions import IsAuthenticated
 
 
 # CHAT LIST VIEW:
@@ -50,11 +52,29 @@ class ChatListView(generics.ListAPIView):
         ).order_by('-is_pinned')
 
 
-# CHAT CREATE:
+# CHAT DETAIL LIST:
+class ChatDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Chat.objects.all()
+    serializer_class = ChatDetailSerializer
+    pagination_class = CustomPagination
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.kwargs.get('id', None):
+            queryset = queryset.filter(id=self.kwargs['id'])
+
+        return queryset
+
+    # CHAT CREATE:
+
+
 class CreateChatView(generics.ListCreateAPIView):
     queryset = Chat.objects.all()
     serializer_class = ChatCreateSerializer
     pagination_class = CustomPagination
+
+    permission_classes = [IsAuthenticated]
 
 
 # MESSAGE CREATE:
@@ -62,6 +82,8 @@ class CreateMessageView(generics.ListCreateAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageCreateSerializer
     pagination_class = CustomPagination
+
+    permission_classes = [IsAuthenticated]
 
 
 # MESSAGE LIST:
@@ -77,6 +99,8 @@ class DeleteMessageView(generics.DestroyAPIView):
     serializer_class = MessageSerializer
     pagination_class = CustomPagination
     lookup_field = 'id'
+
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = self.queryset

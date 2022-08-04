@@ -28,6 +28,12 @@ class ChatCreateSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ChatDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Chat
+        fields = "__all__"
+
+
 class MessageCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
