@@ -15,10 +15,10 @@ class Chat(models.Model):
     avatar = models.ImageField(upload_to="chat/", null=True, blank=True)
 
     members = models.ManyToManyField(User, related_name="chat")
-    pinned = models.ManyToManyField(User, related_name='user_pinned')
-    unmuted = models.ManyToManyField(User, related_name='user_unmuted')
+    pinned = models.ManyToManyField(User, related_name='user_pinned', null=True, blank=True)
+    unmuted = models.ManyToManyField(User, related_name='user_unmuted', null=True, blank=True)
     is_group = models.BooleanField(default=False)
-    is_archived = models.ManyToManyField(User, related_name='user_archived')
+    is_archived = models.ManyToManyField(User, related_name='user_archived', null=True, blank=True)
 
 
 class Message(models.Model):

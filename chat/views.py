@@ -4,9 +4,11 @@ from rest_framework import generics
 from django.db import models
 from chat.models import Chat, Message
 from common.models import User
-from chat import serializers
+from .serializers import ChatListSerializer, ChatCreateSerializer
+from helpers.pagination import CustomPagination
 
 
+# CHAT LIST VIEW:
 class ChatListView(generics.ListAPIView):
     queryset = Chat.objects.all().annotate(
         last_message=Message.objects.filter(
@@ -14,9 +16,7 @@ class ChatListView(generics.ListAPIView):
         last_message_date=Message.objects.filter(
             chat_id=models.OuterRef('id')).order_by('-created_at').values('created_at')[:1]
     )
-    serializer_class = serializers.ChatListSerializer
-
-    # .order_by("-messages__created_at").distinct()
+    serializer_class = ChatListSerializer
 
     def get_queryset(self):
         return self.queryset.filter(members=self.request.user).annotate(
@@ -48,3 +48,10 @@ class ChatListView(generics.ListAPIView):
                 output_field=models.BooleanField()
             ),
         ).order_by('-is_pinned')
+
+
+# CHAT CREATE:
+class CreateChatView(generics.ListCreateAPIView):
+    queryset = Chat.objects.all()
+    serializer_class = ChatCreateSerializer
+    pagination_class = CustomPagination
