@@ -66,9 +66,8 @@ class ChatDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         return queryset
 
-    # CHAT CREATE:
 
-
+# CHAT CREATE:
 class CreateChatView(generics.ListCreateAPIView):
     queryset = Chat.objects.all()
     serializer_class = ChatCreateSerializer
