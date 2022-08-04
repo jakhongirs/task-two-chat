@@ -64,6 +64,13 @@ class CreateMessageView(generics.ListCreateAPIView):
     pagination_class = CustomPagination
 
 
+# MESSAGE LIST:
+class ListMessageView(generics.ListAPIView):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    pagination_class = CustomPagination
+
+
 # MESSAGE DELETE:
 class DeleteMessageView(generics.DestroyAPIView):
     queryset = Message.objects.all()
