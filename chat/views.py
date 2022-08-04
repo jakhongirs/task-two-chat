@@ -4,7 +4,7 @@ from rest_framework import generics
 from django.db import models
 from chat.models import Chat, Message
 from common.models import User
-from .serializers import ChatListSerializer, ChatCreateSerializer
+from .serializers import ChatListSerializer, ChatCreateSerializer, MessageCreateSerializer, MessageSerializer
 from helpers.pagination import CustomPagination
 
 
@@ -55,3 +55,25 @@ class CreateChatView(generics.ListCreateAPIView):
     queryset = Chat.objects.all()
     serializer_class = ChatCreateSerializer
     pagination_class = CustomPagination
+
+
+# MESSAGE CREATE:
+class CreateMessageView(generics.ListCreateAPIView):
+    queryset = Message.objects.all()
+    serializer_class = MessageCreateSerializer
+    pagination_class = CustomPagination
+
+
+# MESSAGE DELETE:
+class DeleteMessageView(generics.DestroyAPIView):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    pagination_class = CustomPagination
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.kwargs.get('id', None):
+            queryset = queryset.filter(id=self.kwargs['id'])
+
+        return queryset
